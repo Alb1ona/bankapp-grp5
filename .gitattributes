@@ -1,3 +1,4 @@
 # Linux-filer skal have LF-linjeskift, ellers fejler bash/systemd
 *.sh eol=lf
 *.service eol=lf
+*.conf eol=lf

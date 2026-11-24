@@ -2,6 +2,7 @@
 .env
 *.env
 !.env.example
+.env*.local
 ad_dev_fixture.json
 security.jsonl
 *.jsonl
