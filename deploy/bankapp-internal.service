@@ -1,0 +1,14 @@
+[Unit]
+Description=Bankapp internt medarbejder-API (internal surface)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=bankadmin
+WorkingDirectory=/home/bankadmin/bankapp-grp5/backend
+Environment=API_SURFACE=internal
+ExecStart=/home/bankadmin/bankapp-grp5/backend/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8001
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
