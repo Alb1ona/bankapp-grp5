@@ -1,0 +1,25 @@
+# Secrets og lokale konfigurationer (må ALDRIG committes - SEC-09)
+.env
+*.env
+!.env.example
+ad_dev_fixture.json
+security.jsonl
+*.jsonl
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+*.db
+*.sqlite3
+
+# Node / frontend
+node_modules/
+dist/
+.vite/
+
+# Diverse
+.DS_Store
+*.log

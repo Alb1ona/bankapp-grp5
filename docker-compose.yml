@@ -1,0 +1,26 @@
+# Lokal udvikling: starter en PostgreSQL-database (VLAN 60 i produktion).
+# Backend og frontends køres nemmest nativt (se README). Dette gør det let at
+# udvikle og teste, inden bankapplikations-VM'en oprettes (FORM-05).
+#
+#   docker compose up -d db
+#
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: bankapp-db
+    environment:
+      POSTGRES_USER: bankapp
+      POSTGRES_PASSWORD: bankapp_dev_only   # kun lokal udvikling
+      POSTGRES_DB: bankapp
+    ports:
+      - "5432:5432"
+    volumes:
+      - bankapp_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bankapp"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  bankapp_pgdata:
