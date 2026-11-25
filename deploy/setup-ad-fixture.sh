@@ -7,7 +7,9 @@
 # Skriver backend/ad_dev_fixture.json (gitignored - committes ALDRIG) med 5 testbrugere:
 #   ida  = Kundeservice      ivan = Investering
 #   karl = IT og drift       anna = IT og drift      uffe = ingen gruppe (afvises)
-# og sætter AD_DEV_FIXTURE + SESSION_COOKIE_SECURE=false i backend/.env.
+# og sætter AD_DEV_FIXTURE i backend/.env.
+# SESSION_COOKIE_SECURE røres IKKE: .env beholder true (netbanken kører https),
+# og bankapp-internal.service sætter false for medarbejderportalen alene.
 set -euo pipefail
 
 if [[ $EUID -ne 0 ]]; then
@@ -62,8 +64,13 @@ set_env() {
   rm -f "$tmp"
 }
 set_env AD_DEV_FIXTURE "$FIXTURE"
-set_env SESSION_COOKIE_SECURE false
-echo "Opdaterede $ENV_FILE: AD_DEV_FIXTURE=$FIXTURE, SESSION_COOKIE_SECURE=false"
+echo "Opdaterede $ENV_FILE: AD_DEV_FIXTURE=$FIXTURE"
+
+# En tidligere version af dette script satte false i .env - det ramte også netbanken.
+if grep -Eiq '^[[:space:]]*SESSION_COOKIE_SECURE[[:space:]]*=[[:space:]]*"?(false|0|no)' "$ENV_FILE"; then
+  echo "ADVARSEL: SESSION_COOKIE_SECURE=false i .env - netbanken sender så cookies uden Secure-flag." >&2
+  echo "          Sæt den til true i $ENV_FILE (medarbejderportalen får false via bankapp-internal.service)." >&2
+fi
 
 # Fixturen bruges kun, når AD er slået fra.
 if grep -Eiq '^[[:space:]]*AD_ENABLED[[:space:]]*=[[:space:]]*"?(true|1|yes)' "$ENV_FILE"; then

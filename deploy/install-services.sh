@@ -19,6 +19,8 @@ for svc in "${SERVICES[@]}"; do
 done
 
 systemctl daemon-reload
-systemctl enable --now "${SERVICES[@]}"
+systemctl enable "${SERVICES[@]}"
+# restart (ikke kun start), så ændrede .service-filer og kode altid træder i kraft
+systemctl restart "${SERVICES[@]}"
 
 systemctl --no-pager --lines=0 status "${SERVICES[@]}" || true
