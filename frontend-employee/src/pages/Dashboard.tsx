@@ -2,17 +2,12 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../api";
 import { useAuth } from "../auth";
-import { PERM } from "../types";
+import { PERM, ROLE_DESCRIPTION, ROLE_LABEL, roleLabels } from "../types";
 
 interface SystemStatus {
   application: string; env: string; ad_enabled: boolean;
   database_ok: boolean; customer_count: number; account_count: number; uptime_note: string;
 }
-
-const ROLE_TEXT: Record<string, string> = {
-  SUPPORT: "Kundeservice", LOAN_OFFICER: "Lånesagsbehandler",
-  AUDITOR: "Revisor", ADMIN: "Administrator",
-};
 
 export default function Dashboard() {
   const { employee, can } = useAuth();
@@ -28,8 +23,22 @@ export default function Dashboard() {
     <>
       <h1>Velkommen, {employee?.display_name}</h1>
       <p className="subtle">
-        Dine roller: {employee?.roles.map((r) => ROLE_TEXT[r] || r).join(", ") || "ingen"}
+        {employee && employee.roles.length > 1 ? "Dine afdelinger" : "Din afdeling"}:{" "}
+        {roleLabels(employee?.roles ?? []) || "ingen"}
       </p>
+
+      {employee && employee.roles.length > 0 && (
+        <div className="card">
+          <h2>Din adgang</h2>
+          <ul>
+            {employee.roles.map((r) => (
+              <li key={r}>
+                <strong>{ROLE_LABEL[r] || r}:</strong> {ROLE_DESCRIPTION[r] || ""}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <div className="card">
         <h2>Genveje</h2>
@@ -40,7 +49,8 @@ export default function Dashboard() {
         </div>
         {employee && employee.permissions.length === 0 && (
           <p className="subtle" style={{ marginTop: 12 }}>
-            Du har ingen funktionsroller tildelt. Kontakt IT for at få tildelt en AD-gruppe.
+            Du er ikke tilknyttet en afdeling (IT og drift, Kundeservice eller Investering).
+            Kontakt IT og drift for at blive tilføjet den rette AD-gruppe.
           </p>
         )}
       </div>

@@ -151,7 +151,7 @@ class Ldap3Adapter:
 
     @staticmethod
     def _cn_from_dn(dn: str) -> str:
-        # "CN=BANK-App-Loans,OU=Groups,DC=bank,DC=local" -> "BANK-App-Loans"
+        # "CN=Investering,OU=Groups,DC=bank,DC=local" -> "Investering"
         first = dn.split(",")[0]
         return first[3:] if first.upper().startswith("CN=") else first
 

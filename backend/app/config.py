@@ -57,11 +57,11 @@ class Settings(BaseSettings):
     ad_tls_ca_cert: str = ""
     ad_revalidate_seconds: int = 300
     ad_dev_fixture: str = ""        # sti til FakeLdapAdapter-fixture (kun AD_ENABLED=false)
-    ad_access_group: str = "BANK-App-Employees"
-    ad_group_support: str = "BANK-App-Support"
-    ad_group_loans: str = "BANK-App-Loans"
-    ad_group_auditors: str = "BANK-App-Auditors"
-    ad_group_admins: str = "BANK-App-Admins"
+    # AD-afdelingsgrupper (CN, matches 1:1 uden store/små bogstaver). Adgang til
+    # medarbejderportalen kræver medlemskab af mindst én af dem.
+    ad_group_it_drift: str = "IT og drift"
+    ad_group_kundeservice: str = "Kundeservice"
+    ad_group_investering: str = "Investering"
 
     # Logging
     security_log_path: str = "./security.jsonl"

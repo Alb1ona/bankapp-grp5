@@ -1,31 +1,38 @@
 # Rolle- og rettighedsmatrix
 
-Roller afledes **udelukkende** af AD-gruppemedlemskab. Alle gruppenavne/DN'er er
-konfigurerbare i `.env` (`AD_GROUP_*`). Applikationen ændrer aldrig AD-grupper.
+Roller svarer 1:1 til virksomhedens tre **AD-afdelinger** og afledes **udelukkende**
+af AD-gruppemedlemskab. Gruppenavnene (CN) er konfigurerbare i `.env`
+(`AD_GROUP_IT_DRIFT`, `AD_GROUP_KUNDESERVICE`, `AD_GROUP_INVESTERING`) og
+sammenlignes uden forskel på store/små bogstaver. Applikationen ændrer aldrig AD-grupper.
 
-## Overordnet adgang
+## Adgang til medarbejderportalen
 
-Alle medarbejdere skal være medlem af den overordnede adgangsgruppe
-(`AD_ACCESS_GROUP`, standard `BANK-App-Employees`). Uden den afvises login (AD-03),
-uanset øvrige grupper.
+En medarbejder har adgang, hvis vedkommende er medlem af **mindst én** af de tre
+afdelingsgrupper. En gyldig AD-bruger uden nogen af dem afvises ved login (AD-03, T04),
+og mister adgangen ved næste genvalidering, hvis den sidste afdelingsgruppe fjernes
+(AD-06, T05). Der er ikke længere en separat overordnet adgangsgruppe.
 
-## Roller → AD-grupper → rettigheder
+Er en medarbejder i flere afdelinger, får vedkommende foreningsmængden af rettighederne.
 
-| Rolle | AD-gruppe (standardforslag) | Rettigheder | Må IKKE |
+## Afdelinger → AD-grupper → rettigheder
+
+| Rolle | AD-gruppe (standard) | Rettigheder (Permission) | Må IKKE |
 |---|---|---|---|
-| **SUPPORT** | `BANK-App-Support` | Søge kunder, læse konto-/transaktionsdata, besvare sager, spærre konti | Overføre penge, godkende lån, ændre roller |
-| **LOAN_OFFICER** | `BANK-App-Loans` | Se og afgøre låneansøgninger med begrundelse | Ændre roller, foretage overførsler |
-| **AUDITOR** | `BANK-App-Auditors` | Læse og filtrere auditlog (skrivebeskyttet) | Ændre bankdata, slette logs |
-| **ADMIN** | `BANK-App-Admins` | Se systemstatus og applikationsoplysninger | Overføre penge, godkende lån, tildele sig selv rettigheder |
+| **IT_OG_DRIFT** | `IT og drift` | `SYSTEM_STATUS_READ`, `AUDIT_READ`: se systemstatus, læse og filtrere auditlog (skrivebeskyttet) | Se kundedata, godkende lån, overføre penge, ændre bankdata, slette logs |
+| **KUNDESERVICE** | `Kundeservice` | `CUSTOMER_LOOKUP`, `ACCOUNT_FREEZE`, `SUPPORT_CASE_MANAGE`: søge kunder, læse konto-/transaktionsdata, spærre konti, besvare supportsager | Godkende lån, overføre penge, læse auditlog |
+| **INVESTERING** | `Investering` | `LOAN_DECIDE`, `CUSTOMER_LOOKUP`: se og afgøre låneansøgninger med begrundelse, slå kunder op | Spærre konti, overføre penge, læse auditlog, se systemstatus |
+
+Ingen afdeling kan tildele roller; det sker alene i AD.
 
 ## Rettigheder (Permission-enum) → endpoints
 
-| Permission | Endpoints der kræver den |
-|---|---|
-| `CUSTOMER_LOOKUP` | `GET /api/v1/internal/customers`, `GET /api/v1/internal/customers/{id}/accounts` |
-| `LOAN_DECIDE` | `GET /api/v1/internal/loans`, `PATCH /api/v1/internal/loans/{id}/decision` |
-| `AUDIT_READ` | `GET /api/v1/internal/audit/events` |
-| `SYSTEM_STATUS_READ` | `GET /api/v1/internal/system/status` |
+| Permission | Afdeling(er) | Endpoints der kræver den |
+|---|---|---|
+| `CUSTOMER_LOOKUP` | Kundeservice, Investering | `GET /api/v1/internal/customers`, `GET /api/v1/internal/customers/{id}/accounts` |
+| `LOAN_DECIDE` | Investering | `GET /api/v1/internal/loans`, `PATCH /api/v1/internal/loans/{id}/decision` |
+| `AUDIT_READ` | IT og drift | `GET /api/v1/internal/audit/events` |
+| `SYSTEM_STATUS_READ` | IT og drift | `GET /api/v1/internal/system/status` |
+| `ACCOUNT_FREEZE`, `SUPPORT_CASE_MANAGE` | Kundeservice | (reserveret til P1-funktioner; endnu ingen endpoints) |
 
 ## Håndhævelse
 

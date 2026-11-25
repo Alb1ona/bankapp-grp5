@@ -59,6 +59,37 @@ export const PERM = {
   SYSTEM_STATUS_READ: "SYSTEM_STATUS_READ",
 } as const;
 
+// Roller = virksomhedens AD-afdelinger (matcher backendens Role-enum).
+// Rettigheder håndhæves server-side; dette bruges kun til visning.
+export const ROLE = {
+  IT_OG_DRIFT: "IT_OG_DRIFT",
+  KUNDESERVICE: "KUNDESERVICE",
+  INVESTERING: "INVESTERING",
+} as const;
+
+export const ROLE_LABEL: Record<string, string> = {
+  [ROLE.IT_OG_DRIFT]: "IT og drift",
+  [ROLE.KUNDESERVICE]: "Kundeservice",
+  [ROLE.INVESTERING]: "Investering",
+};
+
+export const ROLE_DESCRIPTION: Record<string, string> = {
+  [ROLE.IT_OG_DRIFT]: "Systemstatus og auditlog (kun læseadgang).",
+  [ROLE.KUNDESERVICE]: "Kundeopslag, kontospærring og supportsager.",
+  [ROLE.INVESTERING]: "Behandling af låneansøgninger og kundeopslag.",
+};
+
+// Afdeling -> rettigheder (spejler backendens ROLE_PERMISSIONS).
+export const ROLE_PERMS: Record<string, string[]> = {
+  [ROLE.IT_OG_DRIFT]: [PERM.SYSTEM_STATUS_READ, PERM.AUDIT_READ],
+  [ROLE.KUNDESERVICE]: [PERM.CUSTOMER_LOOKUP],
+  [ROLE.INVESTERING]: [PERM.LOAN_DECIDE, PERM.CUSTOMER_LOOKUP],
+};
+
+export function roleLabels(roles: string[]): string {
+  return roles.map((r) => ROLE_LABEL[r] || r).join(", ");
+}
+
 export interface ApiError {
   code: string;
   message: string;

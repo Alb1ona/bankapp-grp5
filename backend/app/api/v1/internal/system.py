@@ -1,4 +1,4 @@
-"""Systemstatus for ADMIN (FR-22). Rettighedstildeling sker i AD, ikke her."""
+"""Systemstatus for IT og drift (FR-22). Rettighedstildeling sker i AD, ikke her."""
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends

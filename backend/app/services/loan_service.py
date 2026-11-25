@@ -1,7 +1,7 @@
 """
 Lånelogik (FR-12, FR-13, FR-18).
 
-Kunden opretter en ansøgning (status AFVENTER). En LOAN_OFFICER afgør den
+Kunden opretter en ansøgning (status AFVENTER). En medarbejder i Investering afgør den
 præcis én gang; en afgjort sag kan ikke afgøres igen (FR-18, T12).
 Ingen automatisk udbetaling eller kreditvurdering (FR-13).
 """

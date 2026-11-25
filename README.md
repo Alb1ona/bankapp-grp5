@@ -121,16 +121,16 @@ TEST_DATABASE_URL=postgresql+psycopg://bankapp:bankapp_dev_only@localhost:5432/b
 |---|---|
 | T01 | Kundelogin og logout |
 | T02 | Rate limiting ved gentagne fejl-logins |
-| T03 | Gyldigt AD-login i adgangsgruppe → rolle ifølge AD |
-| T04 | Gyldig AD-bruger uden bankgruppe → afvist |
+| T03 | Gyldigt AD-login i afdelingsgruppe → rolle ifølge AD |
+| T04 | Gyldig AD-bruger uden afdelingsgruppe → afvist |
 | T05 | AD-adgang fjernet → aktiv session blokeres ved genvalidering |
 | T06 | Kunde tilgår anden kundes konto → 404, sikkerhedslog |
-| T07 | SUPPORT forsøger lånegodkendelse → 403 |
+| T07 | Kundeservice forsøger lånegodkendelse → 403 |
 | T08 | Gyldig overførsel → saldi, ledger og audit stemmer |
 | T09 | Overførsel uden dækning → afvist, ingen ændring |
 | T10 | Gentagen request med samme idempotency key → kun én postering |
 | T11 | Samtidige overførsler → intet overtræk |
-| T12 | Låneansøgning afgøres kun af LOAN_OFFICER, kun én gang |
+| T12 | Låneansøgning afgøres kun af Investering, kun én gang |
 | T13 | Kunde-session afvist på intern API-rute |
 | T14 | Intern fejl → generisk besked uden secrets |
 
@@ -144,9 +144,27 @@ TEST_DATABASE_URL=postgresql+psycopg://bankapp:bankapp_dev_only@localhost:5432/b
 - **Lokal udvikling:** lad `AD_ENABLED=false`. Kopiér
   `backend/ad_dev_fixture.example.json` til `backend/ad_dev_fixture.json`
   (gitignored), udfyld test-passwords, og sæt `AD_DEV_FIXTURE=ad_dev_fixture.json`.
-  Så kan I logge ind som fx `ida`, `karl`, `ivan` med jeres egne testkoder.
+  Så kan I logge ind med testbrugerne:
 
-Roller bestemmes **udelukkende** af AD-gruppemedlemskab (se `docs/rollematrix.md`).
+  | Bruger | AD-gruppe | Rolle |
+  |---|---|---|
+  | `ida` | Kundeservice | KUNDESERVICE |
+  | `ivan` | Investering | INVESTERING |
+  | `karl`, `anna` | IT og drift | IT_OG_DRIFT |
+  | `uffe` | (ingen) | afvises |
+
+Roller er virksomhedens tre **AD-afdelinger** og bestemmes **udelukkende** af
+AD-gruppemedlemskab (gruppenavnene sættes i `AD_GROUP_IT_DRIFT`,
+`AD_GROUP_KUNDESERVICE` og `AD_GROUP_INVESTERING`):
+
+| Afdeling | Kan |
+|---|---|
+| IT og drift | Se systemstatus og auditlog |
+| Kundeservice | Kundeopslag, kontospærring, supportsager |
+| Investering | Lånebehandling og kundeopslag |
+
+Adgang til medarbejderportalen kræver medlemskab af mindst én af de tre grupper
+(se `docs/rollematrix.md`).
 
 ---
 

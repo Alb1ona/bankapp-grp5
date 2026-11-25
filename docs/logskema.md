@@ -27,7 +27,7 @@ store mængder personoplysninger.
 ## Eksempel (afvist adgang)
 
 ```json
-{"timestamp":"2026-11-18T12:00:00Z","application":"bankapp","event_type":"ACCESS_DENIED","severity":"WARNING","result":"DENIED","request_id":"req-demo-001","actor_type":"EMPLOYEE","actor_id":"employee-guid","source_ip":"192.0.2.25","target_type":"loan_application","target_id":"loan-uuid","reason":"Missing LOAN_OFFICER permission"}
+{"timestamp":"2026-11-18T12:00:00Z","application":"bankapp","event_type":"ACCESS_DENIED","severity":"WARNING","result":"DENIED","request_id":"req-demo-001","actor_type":"EMPLOYEE","actor_id":"employee-guid","source_ip":"192.0.2.25","target_type":"loan_application","target_id":"loan-uuid","reason":"Missing LOAN_DECIDE permission"}
 ```
 
 ## Eventtyper (afsnit 8.1)
@@ -53,5 +53,5 @@ store mængder personoplysninger.
 ## Dobbelt spor
 
 Hver sikkerhedshændelse skrives både til JSON-filen (til Wazuh) og til tabellen
-`audit_events` (append-only, læses af AUDITOR i portalen). Manglende adgang til
+`audit_events` (append-only, læses af IT og drift i portalen). Manglende adgang til
 logdestinationen ruller **aldrig** en korrekt banktransaktion tilbage (LOG-05).

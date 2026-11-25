@@ -21,7 +21,7 @@ class EmployeeMeResponse(BaseModel):
     permissions: list[str]
 
 
-# -- Kundesøgning (SUPPORT) ---------------------------------------------------
+# -- Kundesøgning (KUNDESERVICE, INVESTERING) -------------------------------
 class CustomerSearchResult(BaseModel):
     customer_id: str
     customer_number: str
@@ -38,7 +38,7 @@ class AccountAdminView(BaseModel):
     status: str
 
 
-# -- Lånebehandling (LOAN_OFFICER) --------------------------------------------
+# -- Lånebehandling (INVESTERING) ---------------------------------------------
 class LoanDecisionRequest(BaseModel):
     approve: bool
     decision_note: str = Field(min_length=3, max_length=500)
@@ -58,12 +58,12 @@ class LoanAdminView(BaseModel):
     reviewed_at: datetime | None
 
 
-# -- Kontospærring (SUPPORT, P1) ----------------------------------------------
+# -- Kontospærring (KUNDESERVICE, P1) -----------------------------------------
 class AccountFreezeRequest(BaseModel):
     reason: str = Field(min_length=3, max_length=300)
 
 
-# -- Audit (AUDITOR) ----------------------------------------------------------
+# -- Audit (IT_OG_DRIFT) ------------------------------------------------------
 class AuditEventView(BaseModel):
     id: str
     timestamp: datetime
@@ -79,7 +79,7 @@ class AuditEventView(BaseModel):
     reason: str | None
 
 
-# -- Systemstatus (ADMIN) -----------------------------------------------------
+# -- Systemstatus (IT_OG_DRIFT) -----------------------------------------------
 class SystemStatusView(BaseModel):
     application: str
     env: str

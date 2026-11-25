@@ -2,7 +2,7 @@
 Audit-hændelser i databasen (tabel: audit_events).
 
 DB-05: append-only for normale applikationsroller. Applikationen tilbyder
-ingen UPDATE/DELETE på denne tabel; AUDITOR-rollen er skrivebeskyttet (FR-21).
+ingen UPDATE/DELETE på denne tabel; IT og drift har kun læseadgang (FR-21).
 Dette supplerer JSON-filloggen til Wazuh (afsnit 8).
 """
 from __future__ import annotations

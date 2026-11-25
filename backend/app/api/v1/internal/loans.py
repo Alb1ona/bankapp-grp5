@@ -1,4 +1,4 @@
-"""Lånebehandling for LOAN_OFFICER (FR-18, T07, T12)."""
+"""Lånebehandling for Investering (FR-18, T07, T12)."""
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, Query

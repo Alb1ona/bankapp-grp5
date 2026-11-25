@@ -36,7 +36,8 @@ Udfyld **ved installation** (ingen værdier gættes – jf. afsnit 1.1):
 - `DATABASE_SSLMODE=verify-full`, `DATABASE_SSLROOTCERT=/sti/ca.pem`
 - `AD_ENABLED=true`, `AD_SERVER_URI=ldaps://<dc-host>:636`, `AD_BASE_DN=...`
 - `AD_BIND_DN=<søgekonto>`, `AD_BIND_PASSWORD=<kode>`, `AD_TLS_CA_CERT=/sti/ca.pem`
-- `AD_GROUP_*` = jeres faktiske AD-gruppenavne
+- `AD_GROUP_IT_DRIFT` / `AD_GROUP_KUNDESERVICE` / `AD_GROUP_INVESTERING` = CN på afdelingsgrupperne
+  (standard `"IT og drift"`, `"Kundeservice"`, `"Investering"`; sæt i anførselstegn pga. mellemrum)
 - `SECURITY_LOG_PATH=/var/log/bankapp/security.jsonl`
 - `SESSION_COOKIE_SECURE=true`, `EXPOSE_OPENAPI_DOCS=false`
 - `CUSTOMER_FRONTEND_ORIGIN` / `INTERNAL_FRONTEND_ORIGIN` = de rigtige URL'er

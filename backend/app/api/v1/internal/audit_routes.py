@@ -1,4 +1,4 @@
-"""Auditlog-visning for AUDITOR (FR-21). Skrivebeskyttet, filtrerbar (DB-05)."""
+"""Auditlog-visning for IT og drift (FR-21). Skrivebeskyttet, filtrerbar (DB-05)."""
 from __future__ import annotations
 
 from datetime import datetime

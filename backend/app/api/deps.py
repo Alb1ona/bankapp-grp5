@@ -139,9 +139,9 @@ def get_current_employee(
         try:
             adapter = get_ldap_adapter()
             identity = adapter.fetch_identity(employee.ad_username)
-            group_cns = [c.lower() for c in identity.group_cns]
-            in_access_group = settings.ad_access_group.lower() in group_cns
-            if not identity.is_active or not in_access_group:
+            # Adgang = mindst én afdelingsrolle (IT og drift/Kundeservice/Investering).
+            new_roles = roles_from_ad_groups(identity.group_cns)
+            if not identity.is_active or not new_roles:
                 # AD-05/AD-06: adgang fjernet -> bloker og tilbagekald session.
                 revoke_session(db, row)
                 audit.log_event(
@@ -152,7 +152,7 @@ def get_current_employee(
                 )
                 db.commit()
                 raise AuthorizationError("Din adgang er blevet fjernet.")
-            roles = roles_from_ad_groups(identity.group_cns)
+            roles = new_roles
             update_roles_cache(db, row, roles)
             db.commit()
         except AdConnectionError:

@@ -1,4 +1,4 @@
-"""Kundesøgning og -opslag for SUPPORT (FR-17). Skrivebeskyttet kundedata."""
+"""Kundesøgning og -opslag for Kundeservice og Investering (FR-17). Skrivebeskyttet kundedata."""
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, Query

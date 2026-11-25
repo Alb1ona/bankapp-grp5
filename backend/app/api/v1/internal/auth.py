@@ -107,19 +107,19 @@ def login(
         db.commit()
         raise AuthenticationError("Login er midlertidigt utilgængeligt.")
 
-    # AD-03: skal være medlem af den overordnede adgangsgruppe.
-    group_cns = [c.lower() for c in identity.group_cns]
-    if settings.ad_access_group.lower() not in group_cns:
+    # AD-03: adgang kræver medlemskab af mindst én afdelingsgruppe
+    # (IT og drift / Kundeservice / Investering).
+    roles = roles_from_ad_groups(identity.group_cns)
+    if not roles:
         audit.log_event(
             db, event_type=audit.AD_GROUP_ACCESS_DENIED, result=audit.DENIED,
             severity=audit.WARNING, actor_type="EMPLOYEE",
             actor_id=identity.object_guid, source_ip=source_ip,
-            request_id=request_id, reason="Ikke medlem af adgangsgruppe",
+            request_id=request_id, reason="Ikke medlem af nogen afdelingsgruppe",
         )
         db.commit()
         raise AuthorizationError("Du har ikke adgang til medarbejderportalen.")
 
-    roles = roles_from_ad_groups(identity.group_cns)
     emp = _upsert_employee(db, identity)
     login_rate_limiter.reset(rl_key)
 
