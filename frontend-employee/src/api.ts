@@ -1,9 +1,12 @@
-// API-klient til kunde-API'et.
+// API-klient til det interne medarbejder-API.
 // - Sender cookies (credentials: 'include') til server-side session.
 // - Holder CSRF-token i hukommelsen og sender det i X-CSRF-Token ved ændringer.
 import type { ApiError } from "./types";
 
-const API_BASE = (import.meta.env.VITE_API_BASE as string) || "http://localhost:8000";
+// Tom VITE_API_BASE = relative URL'er (same-origin): portalen kalder /api/v1/internal/...
+// på samme host, som den er hentet fra, så den virker både via IP og hostname bag nginx.
+// Lokal udvikling sætter VITE_API_BASE=http://localhost:8001 i .env.
+const API_BASE = (import.meta.env.VITE_API_BASE as string) || "";
 
 let csrfToken: string | null = null;
 
